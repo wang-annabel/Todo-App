@@ -7,7 +7,7 @@ const router = express.Router();
 
 // get all todos for logged-in user
 router.get("/", async (req, res) => {
-  const todos = await prisma.todos.findMany({
+  const todos = await prisma.todo.findMany({
     where: {
       userId: req.userId,
     },
@@ -19,11 +19,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   // does it automatically get routed to /todos?
   const { task } = req.body;
-  // const insertTodo = db.prepare(
-  //   `INSERT INTO todos (user_id, task) VALUES (?, ?)`
-  // );
-  // const result = insertTodo.run(req.userId, task);
-  const todo = await prisma.todos.create({
+  const todo = await prisma.todo.create({
     data: {
       userId: req.userId,
       task: task,
@@ -39,7 +35,7 @@ router.put("/:id", async (req, res) => {
   // access query from url like so:
   // const { page } = req.query;
 
-  const updated = await prisma.todos.update({
+  const updated = await prisma.todo.update({
     where: {
       id: parseInt(id),
       userId: req.userId,
@@ -54,7 +50,7 @@ router.put("/:id", async (req, res) => {
 // delete a todo
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  const deleted = await prisma.todos.delete({
+  const deleted = await prisma.todo.delete({
     where: {
       id: parseInt(id),
       userId: req.userId,
