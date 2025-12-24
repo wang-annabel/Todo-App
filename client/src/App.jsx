@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Auth from "./auth.jsx";
 import Dashboard from "./Dashboard.jsx";
 
@@ -10,20 +10,41 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
 
+  // Check if token exists on mount
+  useEffect(() => {
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, [token]);
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    setToken(null);
+    setIsLoggedIn(false);
+  }
+
   if (isLoggedIn) {
     return (
       <>
-        <Dashboard apiBase={apiBase} token={token} />
+        <div>
+          <Dashboard
+            apiBase={apiBase}
+            token={token}
+            onLogout={() => handleLogout()}
+          />
+        </div>
       </>
     );
   } else {
     return (
       <>
-        <Auth
-          apiBase={apiBase}
-          onLogin={() => setIsLoggedIn(true)}
-          onSetToken={(val) => setToken(val)}
-        />
+        <div>
+          <Auth
+            apiBase={apiBase}
+            onLogin={() => setIsLoggedIn(true)}
+            onSetToken={(val) => setToken(val)}
+          />
+        </div>
       </>
     );
   }
