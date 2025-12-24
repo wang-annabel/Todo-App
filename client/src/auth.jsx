@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./styles.css";
 import "./fanta.css";
 
-function Auth({ apiBase, onLogin }) {
+function Auth({ apiBase, onLogin, onSetToken }) {
   const [isRegistration, setIsRegistration] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,8 +35,6 @@ function Auth({ apiBase, onLogin }) {
     //set error display to none
     setIsAuthenticating(true);
 
-    // and change authButton text... via state?
-
     try {
       let data;
       if (isRegistration) {
@@ -60,8 +58,8 @@ function Auth({ apiBase, onLogin }) {
       }
 
       if (data.token) {
-        let token = data.token;
-        localStorage.setItem("token", token);
+        onSetToken(data.token);
+        localStorage.setItem("token", data.token);
         onLogin();
         await fetchTodos();
       } else {
